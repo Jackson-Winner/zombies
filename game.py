@@ -1,23 +1,25 @@
 import pygame
 import random
 import sys
+
+from pygame import Surface, SurfaceType
+
 from background import *
 from game_parameters import *
-from car import *
+from player import *
 
 # Initialize pygame
 pygame.init()
 
 # Create Screen
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-pygame.display.set_caption("Stuff and things!")
+screen: Surface | SurfaceType = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+pygame.display.set_caption("RUN!")
 
-# Initialize Cars
-for _ in range(2):
-    cars.add(Car(random.randint(SCREEN_WIDTH, SCREEN_WIDTH * 1.5), 0))
-
-# Clock object
+# Clock objects
 clock = pygame.time.Clock()
+
+# Create the Player
+player = Player(SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
 
 # Main Loop
 running = True
@@ -27,21 +29,19 @@ draw_background(background)
 while running:
     # Close Game
     for event in pygame.event.get():
-        print(event)
         if event.type == pygame.QUIT:
             running = False
-
-    # Draw the fish
-    # cars.draw(screen)
-
-    # Update the cars on the road
-    # cars.update()
 
     # Draw Background
     screen.blit(background, (0, 0))
 
+    player.move()
+
+    # Draw the Player
+    player.draw(screen)
+
     # Update the display
-    pygame.display.flip()
+    pygame.display.update()
 
     # Limit Frame Rate
     clock.tick(60)
