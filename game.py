@@ -7,6 +7,7 @@ from pygame import Surface, SurfaceType
 from background import *
 from game_parameters import *
 from player import *
+from enemy import *
 
 # Initialize pygame
 pygame.init()
@@ -19,7 +20,9 @@ pygame.display.set_caption("RUN!")
 clock = pygame.time.Clock()
 
 # Create the Player
-player = Player(SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
+#player = Player(SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
+
+#enemy = Enemy(random.randint(GRASS_TILE_SIZE,SCREEN_WIDTH-2*GRASS_TILE_SIZE), ROAD_TILE_SIZE)
 
 # Main Loop
 running = True
@@ -36,9 +39,11 @@ while running:
     screen.blit(background, (0, 0))
 
     player.move()
+    enemies.move_zombie()
 
     # Draw the Player
     player.draw(screen)
+    enemies.draw(screen)
 
     # Update the display
     pygame.display.update()

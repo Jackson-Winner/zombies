@@ -54,3 +54,6 @@ class Player(pygame.sprite.Sprite):
 
     def draw(self, surface):
         surface.blit(self.image, (self.player_x, self.player_y))
+
+
+player = Player(SCREEN_WIDTH/2, SCREEN_HEIGHT/2)

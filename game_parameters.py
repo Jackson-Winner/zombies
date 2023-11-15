@@ -8,4 +8,6 @@ GRASS_TILE_SIZE = 40
 X_CHANGE = 0
 Y_CHANGE = 0
 MAX_SPEED = 7
-ZOMBIE_SPEED = random.randint(3,7)
+ZOMBIE_SPEED = .5
+
+
