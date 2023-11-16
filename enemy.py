@@ -16,16 +16,16 @@ class Enemy(pygame.sprite.Sprite):
     def update(self):
 
         if self.x > player.player_x:
-            self.X_CHANGE = -random.uniform(2, 7)
+            self.X_CHANGE = -random.uniform(ZOMBIE_MIN_SPEED, ZOMBIE_MAX_SPEED)
         elif self.x < player.player_x:
-            self.X_CHANGE = random.uniform(2, 7)
+            self.X_CHANGE = random.uniform(ZOMBIE_MIN_SPEED, ZOMBIE_MAX_SPEED)
         else:
             self.X_CHANGE = 0
 
         if self.y > player.player_y:
-            self.Y_CHANGE = -random.uniform(2, 7)
+            self.Y_CHANGE = -random.uniform(ZOMBIE_MIN_SPEED, ZOMBIE_MAX_SPEED)
         elif self.y < player.player_y:
-            self.Y_CHANGE = random.uniform(2, 7)
+            self.Y_CHANGE = random.uniform(ZOMBIE_MIN_SPEED, ZOMBIE_MAX_SPEED)
         else:
             self.Y_CHANGE = 0
 
@@ -47,7 +47,12 @@ def add_enemies(total, amount):
 
     if len(enemies) < total:
         for _ in range(amount):
-            enemies.add(Enemy(random.randint(GRASS_TILE_SIZE, SCREEN_WIDTH - 2 * GRASS_TILE_SIZE), ROAD_TILE_SIZE))
+            random_number = random.randint(0, 1)
+            if random_number == 0:
+                enemies.add(Enemy(random.randint(GRASS_TILE_SIZE, SCREEN_WIDTH - 2 * GRASS_TILE_SIZE), ROAD_TILE_SIZE))
+            elif random_number == 1:
+                enemies.add(Enemy(random.randint(GRASS_TILE_SIZE, SCREEN_WIDTH - 2 *
+                                                 GRASS_TILE_SIZE), SCREEN_HEIGHT-2*ROAD_TILE_SIZE))
 
 
 class Delay:
@@ -64,4 +69,4 @@ class Delay:
             add_enemies(total, amount)
 
 
-cooldown = Delay()
+cooldown = Delay(COOLDOWN_TIME)

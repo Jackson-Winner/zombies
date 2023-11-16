@@ -1,14 +1,15 @@
 import pygame
 from game_parameters import *
-# Create class for player
 
+
+# Create class for player
 class Player(pygame.sprite.Sprite):
 
-    def __init__(self, x, y):
+    def __init__(self):
         super().__init__()
         # TODO Flip fish if going other way
         self.image = pygame.image.load("../zombies/assets/sprites/player.png")
-        # self.rect = self.image.get_rect()
+        self.rect = self.image.get_rect()
         self.player_x = SCREEN_WIDTH/2
         self.player_y = SCREEN_HEIGHT/2
         self.X_CHANGE = 0
@@ -39,7 +40,7 @@ class Player(pygame.sprite.Sprite):
         self.player_x += self.X_CHANGE
         self.player_y += self.Y_CHANGE
 
-        # Bound the Player
+        # Bound the Player to the play area
         if self.player_x >= SCREEN_WIDTH - 2 * GRASS_TILE_SIZE:
             self.player_x = SCREEN_WIDTH - 2 * GRASS_TILE_SIZE
         elif self.player_x < GRASS_TILE_SIZE:
@@ -50,10 +51,12 @@ class Player(pygame.sprite.Sprite):
         elif self.player_y < ROAD_TILE_SIZE:
             self.player_y = ROAD_TILE_SIZE
 
-        return self.player_x, self.player_y
+        self.rect.x = self.player_x
+        self.rect.y = self.player_y
 
     def draw(self, surface):
         surface.blit(self.image, (self.player_x, self.player_y))
 
 
-player = Player(SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
+# Create an instance of the Player class
+player = Player()
