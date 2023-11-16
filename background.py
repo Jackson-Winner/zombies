@@ -1,9 +1,10 @@
 import pygame
-import random
 from game_parameters import *
-def draw_background(surface):
-    # Load Files
 
+
+def draw_background(surface):
+
+    # Load Files
     road = pygame.image.load("../zombies/assets/sprites/road.png").convert()
     grass = pygame.image.load("../zombies/assets/sprites/grass.png").convert()
     water_l = pygame.image.load("../zombies/assets/sprites/water_l.png").convert()
@@ -16,7 +17,7 @@ def draw_background(surface):
     # Fill the Screen with grass
     for x in range(0, SCREEN_WIDTH, GRASS_TILE_SIZE):
         for y in range(0, SCREEN_HEIGHT-ROAD_TILE_SIZE, GRASS_TILE_SIZE):
-            surface.blit(grass, (x,y))
+            surface.blit(grass, (x, y))
     # Fill Sides with water
     for y in range(ROAD_TILE_SIZE, SCREEN_HEIGHT-ROAD_TILE_SIZE, GRASS_TILE_SIZE):
         surface.blit(water_r, (SCREEN_WIDTH-GRASS_TILE_SIZE, y))
@@ -32,3 +33,11 @@ def draw_background(surface):
     for x in range(0, SCREEN_WIDTH, GRASS_TILE_SIZE):
         surface.blit(road, (x, 0))
         surface.blit(road, (x, SCREEN_HEIGHT-ROAD_TILE_SIZE))
+
+
+# Start Screen Zombie
+start_screen_zombie = pygame.image.load("assets/sprites/zombie_icon.png")
+
+# Life Icon
+life_icon = pygame.image.load("assets/sprites/heart.png")
+life_icon.set_colorkey((255, 255, 255))
