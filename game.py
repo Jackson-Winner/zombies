@@ -13,7 +13,7 @@ from enemy import *
 pygame.init()
 
 # Create Screen
-screen: Surface | SurfaceType = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+screen= pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("RUN!")
 
 # Clock objects
@@ -29,6 +29,7 @@ running = True
 background = screen.copy()
 draw_background(background)
 
+
 while running:
     # Close Game
     for event in pygame.event.get():
@@ -38,8 +39,11 @@ while running:
     # Draw Background
     screen.blit(background, (0, 0))
 
+    # Add enemies to screen
+    cooldown.spawn(60, 1)
+
     player.move()
-    enemies.move_zombie()
+    enemies.update()
 
     # Draw the Player
     player.draw(screen)
