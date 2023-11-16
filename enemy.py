@@ -49,10 +49,10 @@ def add_enemies(total, amount):
         for _ in range(amount):
             random_number = random.randint(0, 1)
             if random_number == 0:
-                enemies.add(Enemy(random.randint(GRASS_TILE_SIZE, SCREEN_WIDTH - 2 * GRASS_TILE_SIZE), ROAD_TILE_SIZE))
+                enemies.add(Enemy(random.randint(GRASS_TILE_SIZE, SCREEN_WIDTH - 2 * GRASS_TILE_SIZE), -ROAD_TILE_SIZE))
             elif random_number == 1:
                 enemies.add(Enemy(random.randint(GRASS_TILE_SIZE, SCREEN_WIDTH - 2 *
-                                                 GRASS_TILE_SIZE), SCREEN_HEIGHT-2*ROAD_TILE_SIZE))
+                                                 GRASS_TILE_SIZE), SCREEN_HEIGHT))
 
 
 class Delay:
