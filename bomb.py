@@ -1,7 +1,8 @@
-import random
-from game_parameters import *
 import pygame
-from enemy import enemies
+import random
+from game_parameters import (SCREEN_WIDTH, SCREEN_HEIGHT, ROAD_TILE_SIZE,
+                             GRASS_TILE_SIZE, BOMB_SIZE, CHANCE_BOMB_SPAWN, MAX_NUKES)
+
 
 class Bomb(pygame.sprite.Sprite):
 
@@ -19,5 +20,6 @@ nukes = pygame.sprite.Group()
 
 def spawn_nuke():
     bomb_spawn = random.randint(0, CHANCE_BOMB_SPAWN)
-    if bomb_spawn == CHANCE_BOMB_SPAWN and len(nukes) != 1:
-        nukes.add(Bomb(random.randint(GRASS_TILE_SIZE, SCREEN_WIDTH-GRASS_TILE_SIZE-BOMB_SIZE), random.randint(ROAD_TILE_SIZE, SCREEN_HEIGHT-ROAD_TILE_SIZE-BOMB_SIZE)))
+    if bomb_spawn == CHANCE_BOMB_SPAWN and len(nukes) != MAX_NUKES:
+        nukes.add(Bomb(random.randint(GRASS_TILE_SIZE, SCREEN_WIDTH-GRASS_TILE_SIZE-BOMB_SIZE),
+                       random.randint(ROAD_TILE_SIZE, SCREEN_HEIGHT-ROAD_TILE_SIZE-BOMB_SIZE)))

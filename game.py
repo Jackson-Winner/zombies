@@ -1,11 +1,11 @@
-import pygame
-import random
 import sys
 
 from background import *
 from player import *
 from enemy import *
 from bomb import *
+from health_drop import *
+from game_parameters import *
 
 # Initialize pygame
 pygame.init()
@@ -13,9 +13,9 @@ pygame.init()
 # Create Screen
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("RUN!")
-start_font = pygame.font.Font("assets/fonts/Carnevalee_Freakshow.ttf", 64)
-instructions_font = pygame.font.Font("assets/fonts/Carnevalee_Freakshow.ttf", 32)
-game_over_font = pygame.font.Font("assets/fonts/Carnevalee_Freakshow.ttf", 40)
+start_font = pygame.font.Font("assets/fonts/game_font.ttf", 64)
+instructions_font = pygame.font.Font("assets/fonts/game_font.ttf", 32)
+game_over_font = pygame.font.Font("assets/fonts/game_font.ttf", 40)
 
 # Clock objects
 clock = pygame.time.Clock()
@@ -26,9 +26,10 @@ background = screen.copy()
 draw_background(background)
 
 # Create Player stuff
-health = 3
+health = GAME_HEALTH
 score = 0
 highscore = 0
+player2_status = False
 
 while running:
 
@@ -39,9 +40,12 @@ while running:
         # Display Title and start instructions
         screen.fill((0, 0, 0))
         message = start_font.render("ZOMBIE RUN!", True, (255, 0, 0))
-        screen.blit(message, (SCREEN_WIDTH / 2 - message.get_width() / 2, SCREEN_HEIGHT / 2 - message.get_height() / 2))
-        instructions = instructions_font.render("Press WASD to move and ENTER to start", True, (255, 0, 0))
-        screen.blit(instructions, (SCREEN_WIDTH / 2 - instructions.get_width() / 2, (SCREEN_HEIGHT / 2 - instructions.get_height() / 2) + message.get_height()))
+        screen.blit(message, (SCREEN_WIDTH / 2 - message.get_width() / 2,
+                              SCREEN_HEIGHT / 2 - message.get_height() / 2))
+        instructions = instructions_font.render("Press WASD to move and ENTER to start",
+                                                True, (255, 0, 0))
+        screen.blit(instructions, (SCREEN_WIDTH / 2 - instructions.get_width() / 2,
+                                   (SCREEN_HEIGHT / 2 - instructions.get_height() / 2) + message.get_height()))
         screen.blit(start_screen_zombie, (SCREEN_WIDTH/2 - start_screen_zombie.get_width()/2, 20))
 
         # Flip the display
@@ -57,7 +61,8 @@ while running:
         # Start Game and change modifiers
         keys_pressed = pygame.key.get_pressed()
         if keys_pressed[pygame.K_RETURN]:
-            start_time = pygame.time.get_ticks()
+            score_last = time.time()
+            difficulty_last = time.time()
             start = False
 
     # Logic for when the player is alive
@@ -71,8 +76,9 @@ while running:
         # Draw Background
         screen.blit(background, (0, 0))
 
-        # Draw Bomb
+        # Draw Bombs and Heart drops
         spawn_nuke()
+        spawn_heart()
 
         # Explode bomb if collided
         if nukes:
@@ -82,10 +88,19 @@ while running:
                 enemies.empty()
                 nukes.empty()
 
+        # Add health if collided
+        if hearts:
+            hearts.draw(screen)
+            result_heart = pygame.sprite.spritecollide(player, hearts, True)
+            if result_heart:
+                health += len(result_heart)
+
         # Show the score
-        score_timer = pygame.time.get_ticks() - start_time
-        if score_timer % 10 == 0:
+        score_now = time.time()
+        score_timer = int(score_now) - int(score_last)
+        if score_timer >= SCORE_INTERVAL:
             score += 1
+            score_last = time.time()
         if score > highscore:
             highscore = score
 
@@ -98,6 +113,13 @@ while running:
         for i in range(health):
             screen.blit(life_icon, ((i * GRASS_TILE_SIZE) + GRASS_TILE_SIZE, SCREEN_HEIGHT - 2*ROAD_TILE_SIZE))
 
+        # Difficulty increases every 30 seconds
+        difficulty_now = score_now
+        difficulty_timer = int(difficulty_now) - int(difficulty_last)
+        if difficulty_timer >= DIFFICULTY_INTERVAL:
+            SPAWN_PER_INSTANCE += 1
+            difficulty_last = time.time()
+
         # Add enemies to screen
         cooldown.spawn(TOTAL_ZOMBIES, SPAWN_PER_INSTANCE)
 
@@ -108,6 +130,7 @@ while running:
         # Check for enemy collisions with the player
         result_enemy = pygame.sprite.spritecollide(player, enemies, True)
         if result_enemy:
+            pygame.mixer.Sound.play(hurt)
             health -= 1
 
         # Draw the Player and the enemies
@@ -131,7 +154,8 @@ while running:
 
         # Display the game over text
         message_game_over = game_over_font.render("GAME OVER!", True, (255, 0, 0))
-        screen.blit(message_game_over, (SCREEN_WIDTH / 2 - message_game_over.get_width() / 2, SCREEN_HEIGHT / 2 - message_game_over.get_height() / 2))
+        screen.blit(message_game_over, (SCREEN_WIDTH / 2 - message_game_over.get_width() / 2,
+                                        SCREEN_HEIGHT / 2 - message_game_over.get_height() / 2))
         instructions = instructions_font.render("Press ENTER to restart", True, (255, 0, 0))
         screen.blit(instructions, (SCREEN_WIDTH / 2 - instructions.get_width() / 2,
                                    (SCREEN_HEIGHT / 2 - instructions.get_height() / 2) + message_game_over.get_height()))
@@ -139,7 +163,7 @@ while running:
         # Restart the Game
         keys_pressed = pygame.key.get_pressed()
         if keys_pressed[pygame.K_RETURN]:
-            health = 3
+            health = GAME_HEALTH
             score = 0
             player.player_x = SCREEN_WIDTH/2
             player.player_y = SCREEN_HEIGHT/2

@@ -1,5 +1,5 @@
 import pygame
-from game_parameters import *
+from game_parameters import SCREEN_WIDTH, SCREEN_HEIGHT, GRASS_TILE_SIZE, ROAD_TILE_SIZE
 
 
 def draw_background(surface):

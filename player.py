@@ -1,8 +1,11 @@
 import pygame
-from game_parameters import *
+from game_parameters import SCREEN_WIDTH, SCREEN_HEIGHT, GRASS_TILE_SIZE, ROAD_TILE_SIZE
 
-
+pygame.mixer.init()
+hurt = pygame.mixer.Sound("assets/sounds/lego anakin death sound.mp3")
 # Create class for player
+
+
 class Player(pygame.sprite.Sprite):
 
     def __init__(self):
